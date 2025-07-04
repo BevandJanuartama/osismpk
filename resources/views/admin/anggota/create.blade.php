@@ -14,7 +14,7 @@
     </div>
 @endif
 
-<form action="{{ route('anggota.store') }}" method="POST" enctype="multipart/form-data"
+<form action="{{ route('admin.anggota.store') }}" method="POST" enctype="multipart/form-data"
       class="bg-green-50 p-6 rounded border border-green-300 max-w-lg">
     @csrf
 
@@ -71,7 +71,7 @@
     </button>
 </form>
 
-<a href="{{ route('anggota.index') }}"
+<a href="{{ route('admin.anggota.index') }}"
    class="inline-block mt-4 bg-gray-200 hover:bg-gray-300 text-green-900 px-5 py-2 rounded transition">
     ← Kembali ke Daftar Anggota
 </a>

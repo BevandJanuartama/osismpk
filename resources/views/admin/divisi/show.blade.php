@@ -10,7 +10,7 @@
 </div>
 
 {{-- Tombol untuk menambah anggota --}}
-<a href="{{ route('anggota.create') }}"
+<a href="{{ route('admin.anggota.create') }}"
    class="inline-block mb-4 px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800 transition">
     Tambah Anggota
 </a>
@@ -46,11 +46,11 @@
                         @endif
                     </td>
                     <td class="px-4 py-3 text-center border border-green-500">
-                        <a href="{{ route('anggota.edit', $anggota) }}"
+                        <a href="{{ route('admin.anggota.edit', $anggota) }}"
                            class="inline-block px-3 py-1 mr-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm transition">
                             Edit
                         </a>
-                        <form action="{{ route('anggota.destroy', $anggota) }}" method="POST" class="inline">
+                        <form action="{{ route('admin.anggota.destroy', $anggota) }}" method="POST" class="inline">
                             @csrf
                             @method('DELETE')
                             <button onclick="return confirm('Yakin ingin hapus anggota ini?')"
@@ -73,7 +73,7 @@
 </div>
 
 {{-- Tombol kembali ke daftar divisi --}}
-<a href="{{ route('divisi.index') }}"
+<a href="{{ route('admin.divisi.index') }}"
    class="inline-block mt-6 px-4 py-2 bg-gray-300 text-green-900 rounded hover:bg-gray-400 transition">
     ← Kembali ke daftar divisi
 </a>

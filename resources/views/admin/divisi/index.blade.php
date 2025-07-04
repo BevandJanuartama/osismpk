@@ -5,7 +5,7 @@
 <h1 class="text-3xl font-bold mb-4 text-green-900">Daftar Divisi</h1>
 
 {{-- Tombol untuk menambahkan divisi baru --}}
-<a href="{{ route('divisi.create') }}"
+<a href="{{ route('admin.divisi.create') }}"
    class="text-xl inline-block mb-4 px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800 transition">
     Tambah Divisi
 </a>
@@ -34,7 +34,7 @@
                 <tr class="{{ $loop->even ? 'bg-green-100' : 'bg-white' }} text-[18px]">
                     <td class="px-4 py-3 text-center border border-green-500">{{ $loop->iteration }}</td>
                     <td class="px-4 py-3 text-center border border-green-500">
-                        <a href="{{ route('divisi.show', $divisi) }}" class="text-green-800 font-semibold hover:underline">
+                        <a href="{{ route('admin.divisi.show', $divisi) }}" class="text-green-800 font-semibold hover:underline">
                             {{ $divisi->nama_divisi }}
                         </a>
                     </td>                    
@@ -53,12 +53,12 @@
                     
 
                     <td class="px-4 py-3 text-center border border-green-500">
-                        <a href="{{ route('divisi.edit', $divisi) }}"
+                        <a href="{{ route('admin.divisi.edit', $divisi) }}"
                            class="inline-block px-3 py-1 mr-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm transition">
                             Edit
                         </a>
 
-                        <form action="{{ route('divisi.destroy', $divisi) }}" method="POST" class="inline">
+                        <form action="{{ route('admin.divisi.destroy', $divisi) }}" method="POST" class="inline">
                             @csrf
                             @method('DELETE')
                             <button onclick="return confirm('Yakin ingin menghapus divisi ini?')"

@@ -4,7 +4,7 @@
 <h1 class="text-2xl font-bold mb-6 text-green-900">Edit Anggota</h1>
 
 {{-- Form edit anggota --}}
-<form action="{{ route('anggota.update', $anggota->id) }}" method="POST"
+<form action="{{ route('admin.anggota.update', $anggota->id) }}" method="POST"
       enctype="multipart/form-data"
       class="bg-green-50 p-6 rounded border-2 border-green-500 max-w-lg">
     @csrf
@@ -80,15 +80,15 @@
 
 {{-- Tombol navigasi kembali --}}
 <div class="mt-6 flex flex-col gap-2">
-    <a href="{{ route('anggota.index') }}"
+    <a href="{{ route('admin.anggota.index') }}"
        class="w-60 px-4 py-2 bg-gray-300 text-green-900 rounded hover:bg-gray-400 transition text-center">
         ← Kembali ke Daftar Anggota
     </a>
-    <a href="{{ route('divisi.index') }}"
+    <a href="{{ route('admin.divisi.index') }}"
        class="w-60 px-4 py-2 bg-gray-300 text-green-900 rounded hover:bg-gray-400 transition text-center">
         ← Kembali ke Daftar Divisi
     </a>
-    <a href="{{ route('divisi.show', $anggota->id_divisi) }}"
+    <a href="{{ route('admin.divisi.show', $anggota->id_divisi) }}"
        class="w-60 px-4 py-2 bg-gray-300 text-green-900 rounded hover:bg-gray-400 transition text-center">
         ← Kembali ke Detail Divisi
     </a>

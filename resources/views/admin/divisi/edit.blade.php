@@ -5,7 +5,7 @@
 <h1 class="text-2xl font-bold mb-4 text-green-900">Edit Divisi</h1>
 
 {{-- Form edit data divisi --}}
-<form action="{{ route('divisi.update', $divisi->id) }}" method="POST" enctype="multipart/form-data"
+<form action="{{ route('admin.divisi.update', $divisi->id) }}" method="POST" enctype="multipart/form-data"
       class="bg-white p-6 border border-green-300 rounded-lg shadow-sm max-w-xl">
     @csrf {{-- Token keamanan --}}
     @method('PUT') {{-- Method PUT untuk update --}}
@@ -41,7 +41,7 @@
             Update
         </button>
 
-        <a href="{{ route('divisi.index') }}"
+        <a href="{{ route('admin.divisi.index') }}"
            class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded transition inline-block text-center">
             Batal
         </a>

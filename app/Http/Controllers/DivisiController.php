@@ -49,7 +49,7 @@ class DivisiController extends Controller
 
         // Jika ada parameter `source=public`, tampilkan halaman publik
         if ($request->query('source') === 'public') {
-            return view('admin.divisi_show', compact('divisi', 'anggota'));
+            return view('public.divisi_show', compact('divisi', 'anggota'));
         }
 
         // Jika tidak, anggap sebagai admin

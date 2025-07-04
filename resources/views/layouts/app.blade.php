@@ -20,12 +20,16 @@
 
             {{-- Menu Navigasi --}}
             <div class="space-x-4">
-                <a href="{{ route('divisi.index') }}" class="text-xl hover:bg-green-700 px-3 py-2 rounded transition">
+                <a href="{{ route('admin.divisi.index') }}" class="text-xl hover:bg-green-700 px-3 py-2 rounded transition">
                     Divisi
                 </a>
 
-                <a href="{{ route('anggota.index') }}" class="text-xl hover:bg-green-700 px-3 py-2 rounded transition">
+                <a href="{{ route('admin.anggota.index') }}" class="text-xl hover:bg-green-700 px-3 py-2 rounded transition">
                     Anggota
+                </a>
+
+                <a href="{{ route('admin.event.index') }}" class="text-xl hover:bg-green-700 px-3 py-2 rounded transition">
+                    Event
                 </a>
             </div>
         </div>

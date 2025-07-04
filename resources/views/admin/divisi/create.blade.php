@@ -16,7 +16,7 @@
 @endif
 
 {{-- Form tambah divisi --}}
-<form action="{{ route('divisi.store') }}" method="POST" enctype="multipart/form-data"
+<form action="{{ route('admin.divisi.store') }}" method="POST" enctype="multipart/form-data"
       class="space-y-4 max-w-xl bg-white p-6 border border-green-300 rounded shadow-sm">
     @csrf
 
@@ -42,7 +42,7 @@
             Simpan
         </button>
 
-        <a href="{{ route('divisi.index') }}"
+        <a href="{{ route('admin.divisi.index') }}"
            class="px-4 py-2 bg-gray-300 text-green-900 rounded hover:bg-gray-400 transition">
             ← Kembali
         </a>
