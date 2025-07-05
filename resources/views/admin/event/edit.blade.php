@@ -63,7 +63,7 @@
         @enderror
     </div>
 
-    {{-- Foto Tambahan --}}
+    {{-- Tambah Foto --}}
     <div class="mb-6">
         <label for="fotos" class="block text-green-900 font-semibold mb-1">Tambah Foto (opsional)</label>
         <input type="file" name="fotos[]" id="fotos" multiple accept="image/*"
@@ -72,9 +72,37 @@
         @error('fotos.*')
             <div class="text-red-600 mt-1 text-sm">{{ $message }}</div>
         @enderror
+    </div>
 
-        {{-- Preview Container --}}
-        <div id="preview-container" class="mt-4 grid grid-cols-2 gap-4"></div>
+    {{-- Foto Lama --}}
+    @if ($event->photos && $event->photos->count())
+    <div class="mb-6">
+        <p class="text-green-900 font-semibold mb-2">Foto Lama:</p>
+        <div class="grid grid-cols-2 gap-4">
+            @foreach ($event->photos as $photo)
+                <div class="relative group">
+                    <img src="{{ asset('storage/' . $photo->foto) }}"
+                         class="w-full h-32 object-cover rounded shadow border border-green-300 group-hover:opacity-60 transition" />
+                    
+                    {{-- Tombol hapus --}}
+                    <button type="button"
+                            onclick="removeOldPhoto({{ $photo->id }}, this)"
+                            class="absolute top-1 right-1 bg-red-600 text-white rounded-full px-2 text-sm hover:bg-red-700 z-10">
+                        &times;
+                    </button>
+
+                    {{-- Input hidden untuk kirim ID foto yang ingin dihapus --}}
+                    <input type="hidden" name="delete_photos[]" value="{{ $photo->id }}" class="delete-photo-input" />
+                </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
+
+    {{-- Preview Foto Baru --}}
+    <div class="mb-6">
+        <p class="text-green-900 font-semibold mb-2">Preview Foto Baru:</p>
+        <div id="preview-container" class="grid grid-cols-2 gap-4"></div>
     </div>
 
     {{-- Tombol simpan --}}
@@ -92,25 +120,45 @@
     </a>
 </div>
 
-{{-- Preview Script --}}
+{{-- Script --}}
 <script>
+  // Preview Foto Baru
   document.getElementById('fotos').addEventListener('change', function (event) {
     const files = event.target.files;
     const previewContainer = document.getElementById('preview-container');
     previewContainer.innerHTML = ''; // hapus preview lama
 
-    Array.from(files).forEach(file => {
+    Array.from(files).forEach((file, index) => {
       if (!file.type.startsWith('image/')) return;
 
       const reader = new FileReader();
       reader.onload = function (e) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'relative group';
+
         const img = document.createElement('img');
         img.src = e.target.result;
         img.className = 'w-full h-32 object-cover rounded shadow border border-green-300';
-        previewContainer.appendChild(img);
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.innerHTML = '&times;';
+        btn.className = 'absolute top-1 right-1 bg-red-600 text-white rounded-full px-2 text-sm hover:bg-red-700 z-10';
+        btn.onclick = () => wrapper.remove();
+
+        wrapper.appendChild(img);
+        wrapper.appendChild(btn);
+        previewContainer.appendChild(wrapper);
       };
       reader.readAsDataURL(file);
     });
   });
+
+  // Tandai Foto Lama yang akan dihapus
+  function removeOldPhoto(photoId, button) {
+    const container = button.parentElement;
+    container.classList.add('opacity-50');
+    button.disabled = true;
+  }
 </script>
 @endsection
