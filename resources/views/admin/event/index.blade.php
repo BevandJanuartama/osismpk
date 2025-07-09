@@ -24,6 +24,7 @@
                     <th class="px-4 py-3 text-center border border-green-500">Foto</th>
                     <th class="px-4 py-3 text-center border border-green-500">Nama Event</th>
                     <th class="px-4 py-3 text-center border border-green-500">Tanggal</th>
+                    <th class="px-4 py-3 text-center border border-green-500">Status</th>
                     <th class="px-4 py-3 text-center border border-green-500">Aksi</th>
                 </tr>
             </thead>
@@ -51,6 +52,21 @@
                                 - {{ \Carbon\Carbon::parse($event->tanggal_selesai)->format('d M Y') }}
                             @endif
                         </td>
+
+                        <td class="px-4 py-3 text-center border border-green-500">
+                            <span class="
+                                inline-block px-2 py-1 rounded text-white text-sm
+                                {{
+                                    $event->status === 'Coming Soon' ? 'bg-yellow-500' :
+                                    ($event->status === 'Buka Pendaftaran' ? 'bg-blue-500' :
+                                    ($event->status === 'Sedang Berlangsung' ? 'bg-green-500' :
+                                    ($event->status === 'Telah Selesai' ? 'bg-gray-500' : 'bg-gray-300')))
+                                }}
+                            ">
+                                {{ $event->status }}
+                            </span>
+                        </td>
+                        
                         <td class="px-4 py-3 text-center border border-green-500">
                             <a href="{{ route('admin.event.edit', $event->id) }}"
                                class="inline-block px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm transition">

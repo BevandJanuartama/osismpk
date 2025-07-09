@@ -26,6 +26,18 @@
                class="w-full p-2 border border-green-300 rounded" />
     </div>
 
+    {{-- Status --}}
+    <div class="mb-6">
+        <label for="status" class="block text-green-900 font-semibold mb-1">Status</label>
+        <select name="status" id="status" required
+                class="w-full p-2 border border-green-300 rounded">
+            <option value="Coming Soon" {{ old('status') == 'Coming Soon' ? 'selected' : '' }}>Coming Soon</option>
+            <option value="Buka Pendaftaran" {{ old('status') == 'Buka Pendaftaran' ? 'selected' : '' }}>Buka Pendaftaran</option>
+            <option value="Sedang Berlangsung" {{ old('status') == 'Sedang Berlangsung' ? 'selected' : '' }}>Sedang Berlangsung</option>
+            <option value="Telah Selesai" {{ old('status') == 'Telah Selesai' ? 'selected' : '' }}>Telah Selesai</option>
+        </select>
+    </div>
+
     {{-- Tanggal Mulai --}}
     <div class="mb-6">
         <label for="tanggal_mulai" class="block text-green-900 font-semibold mb-1">Tanggal Mulai</label>
@@ -62,11 +74,25 @@
         <label for="fotos" class="block text-green-900 font-semibold mb-1">Foto-foto Event</label>
         <input type="file" name="fotos[]" id="fotos" accept="image/*" multiple
                class="w-full p-2 border border-green-300 rounded bg-white" />
-        <small class="text-sm text-gray-600">Boleh unggah lebih dari 1 foto. Format: JPG, PNG. Maks. 2MB/foto. Pastikan foto pertama memiliki rasio 1:1</small>
+        <small class="text-sm text-gray-600">Boleh unggah lebih dari 1 foto. Maks: 2MB/foto. Rasio 1:1 untuk foto pertama.</small>
 
-        {{-- Preview Container --}}
         <div id="preview-container" class="mt-4 grid grid-cols-2 gap-4"></div>
     </div>
+
+    {{-- Daftar Lomba --}}
+    <div class="mb-6">
+        <label class="block text-green-900 font-semibold mb-2">Daftar Lomba</label>
+    
+        <div id="lomba-container" class="space-y-4 hidden"></div>
+    
+        <button type="button" id="add-lomba"
+            class="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+            + Tambah Lomba
+        </button>
+    
+        <small class="block text-gray-600 mt-2">Isi nama lomba dan link pendaftarannya. Bisa tambah lebih dari satu.</small>
+    </div>
+    
 
     <button type="submit"
             class="bg-green-700 hover:bg-green-800 text-white px-5 py-2 rounded transition">
@@ -79,26 +105,56 @@
     ← Kembali ke Daftar Event
 </a>
 
-{{-- Preview Script --}}
+{{-- Script Preview Foto & Tambah Lomba --}}
 <script>
-  document.getElementById('fotos').addEventListener('change', function (event) {
-    const files = event.target.files;
-    const previewContainer = document.getElementById('preview-container');
-    previewContainer.innerHTML = ''; // kosongkan preview sebelumnya
-
-    Array.from(files).forEach(file => {
-      if (!file.type.startsWith('image/')) return;
-
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const img = document.createElement('img');
-        img.src = e.target.result;
-        img.className = 'w-full h-32 object-cover rounded shadow border border-green-300';
-        previewContainer.appendChild(img);
-      };
-      reader.readAsDataURL(file);
+    // PREVIEW FOTO
+    document.getElementById('fotos').addEventListener('change', function (event) {
+      const files = event.target.files;
+      const previewContainer = document.getElementById('preview-container');
+      previewContainer.innerHTML = '';
+  
+      Array.from(files).forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+  
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          img.className = 'w-full h-32 object-cover rounded shadow border border-green-300';
+          previewContainer.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      });
     });
-  });
-</script>
-@endsection
-    
+  
+    // TAMBAH LOMBA
+    const tombolLomba = document.getElementById('add-lomba');
+    const containerLomba = document.getElementById('lomba-container');
+  
+    tombolLomba.addEventListener('click', function () {
+      containerLomba.classList.remove('hidden');
+  
+      const wrapper = document.createElement('div');
+      wrapper.className = 'grid grid-cols-1 md:grid-cols-2 gap-2 items-end relative';
+  
+      wrapper.innerHTML = `
+        <div>
+          <label class="text-sm font-medium text-green-900">Nama Lomba</label>
+          <input type="text" name="lomba_nama[]" required
+                 class="w-full p-2 border border-green-300 rounded" />
+        </div>
+        <div>
+          <label class="text-sm font-medium text-green-900">Link Pendaftaran</label>
+          <input type="url" name="lomba_link[]" required
+                 class="w-full p-2 border border-green-300 rounded" />
+        </div>
+        <button type="button" class="absolute -top-3 -right-3 bg-red-600 text-white rounded-full w-6 h-6 text-sm flex items-center justify-center hover:bg-red-700" onclick="this.parentElement.remove()">
+          &times;
+        </button>
+      `;
+  
+      containerLomba.appendChild(wrapper);
+    });
+  </script>
+  @endsection
+  

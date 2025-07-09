@@ -10,9 +10,10 @@ class CreateDivisiTable extends Migration
     public function up()
     {
         Schema::create('divisi', function (Blueprint $table) {
-            $table->id();                     // Kolom ID (primary key)
-            $table->string('nama_divisi');   // Nama divisi (contoh: Inti OSIS, Agama, Humas, dll)
-            $table->timestamps();            // Kolom created_at & updated_at
+            $table->id();                       // Kolom ID (primary key)
+            $table->string('nama_divisi');     // Nama divisi (contoh: Inti OSIS, Agama, Humas, dll)
+            $table->string('foto')->nullable(); // Kolom foto (opsional)
+            $table->timestamps();              // Kolom created_at & updated_at
         });
     }
 

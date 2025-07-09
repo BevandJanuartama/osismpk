@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\EventPhoto;
+use App\Models\Lomba;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -28,17 +29,39 @@ class EventController extends Controller
             'tanggal_selesai' => 'nullable|date|after_or_equal:tanggal_mulai',
             'link_drive' => 'nullable|url',
             'deskripsi' => 'required',
+            'status' => 'required|in:Coming Soon,Buka Pendaftaran,Sedang Berlangsung,Telah Selesai',
             'fotos.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'lomba_nama.*' => 'nullable|string',
+            'lomba_link.*' => 'nullable|url',
         ]);
 
         $event = Event::create($request->only([
-            'nama_event', 'tanggal_mulai', 'tanggal_selesai', 'link_drive', 'deskripsi'
+            'nama_event',
+            'tanggal_mulai',
+            'tanggal_selesai',
+            'link_drive',
+            'deskripsi',
+            'status'
         ]));
 
+        // Simpan foto
         if ($request->hasFile('fotos')) {
             foreach ($request->file('fotos') as $foto) {
                 $path = $foto->store('event_photos', 'public');
                 $event->photos()->create(['foto' => $path]);
+            }
+        }
+
+        // Simpan daftar lomba
+        if ($request->has('lomba_nama') && $request->has('lomba_link')) {
+            foreach ($request->lomba_nama as $index => $namaLomba) {
+                $link = $request->lomba_link[$index] ?? null;
+                if ($namaLomba && $link) {
+                    $event->lombas()->create([
+                        'nama_lomba' => $namaLomba,
+                        'link_pendaftaran' => $link,
+                    ]);
+                }
             }
         }
 
@@ -47,21 +70,18 @@ class EventController extends Controller
 
     public function show(Request $request, string $id)
     {
-        $event = Event::with('photos')->findOrFail($id);
+        $event = Event::with(['photos', 'lombas'])->findOrFail($id);
 
-        // Jika berasal dari halaman publik
         if ($request->query('source') === 'public') {
             return view('public.event_show', compact('event'));
         }
 
-        // Jika tidak, tampilan admin
         return view('admin.event.show', compact('event'));
     }
 
-
     public function edit(string $id)
     {
-        $event = Event::with('photos')->findOrFail($id);
+        $event = Event::with(['photos', 'lombas'])->findOrFail($id);
         return view('admin.event.edit', compact('event'));
     }
 
@@ -75,17 +95,40 @@ class EventController extends Controller
             'tanggal_selesai' => 'nullable|date|after_or_equal:tanggal_mulai',
             'link_drive' => 'nullable|url',
             'deskripsi' => 'required',
+            'status' => 'required|in:Coming Soon,Buka Pendaftaran,Sedang Berlangsung,Telah Selesai',
             'fotos.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'lomba_nama.*' => 'nullable|string',
+            'lomba_link.*' => 'nullable|url',
         ]);
 
         $event->update($request->only([
-            'nama_event', 'tanggal_mulai', 'tanggal_selesai', 'link_drive', 'deskripsi'
+            'nama_event',
+            'tanggal_mulai',
+            'tanggal_selesai',
+            'link_drive',
+            'deskripsi',
+            'status'
         ]));
 
+        // Simpan foto baru (tanpa hapus yang lama)
         if ($request->hasFile('fotos')) {
             foreach ($request->file('fotos') as $foto) {
                 $path = $foto->store('event_photos', 'public');
                 $event->photos()->create(['foto' => $path]);
+            }
+        }
+
+        // Hapus lomba lama lalu simpan yang baru
+        $event->lombas()->delete();
+        if ($request->has('lomba_nama') && $request->has('lomba_link')) {
+            foreach ($request->lomba_nama as $index => $namaLomba) {
+                $link = $request->lomba_link[$index] ?? null;
+                if ($namaLomba && $link) {
+                    $event->lombas()->create([
+                        'nama_lomba' => $namaLomba,
+                        'link_pendaftaran' => $link,
+                    ]);
+                }
             }
         }
 
@@ -98,7 +141,10 @@ class EventController extends Controller
 
         foreach ($event->photos as $photo) {
             Storage::disk('public')->delete($photo->foto);
+            $photo->delete();
         }
+
+        $event->lombas()->delete(); // Hapus semua lomba terkait
 
         $event->delete();
 

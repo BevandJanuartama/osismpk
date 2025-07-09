@@ -18,9 +18,9 @@ return new class extends Migration
             $table->date('tanggal_selesai')->nullable();
             $table->string('link_drive')->nullable();
             $table->text('deskripsi');
+            $table->string('status')->default('Coming Soon'); // Kolom status langsung ditambahkan di sini
             $table->timestamps();
         });
-        
     }
 
     /**
